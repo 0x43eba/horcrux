@@ -1,0 +1,20 @@
+[package]
+name = "horcrux"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ipfs-api-backend-hyper = "0.6"
+base64 = "0.21.7"
+env_logger = "0.10.1"
+ipfs-api = "0.17.0"
+log = "0.4.20"
+serde = { version = "1.0.195", features = ["derive"] }
+serde_json = "1.0.111"
+sodiumoxide = "0.2.7"
+tokio = { version = "1", features = ["full"] }
+futures = "0.3.30"
+crypto = "0.5.1"
+sha256 = "1.5.0"
