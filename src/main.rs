@@ -1,5 +1,6 @@
 mod algorithm;
 mod transmit;
+mod steg;
 mod cli;
 use std::env;
 

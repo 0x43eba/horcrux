@@ -18,3 +18,5 @@ tokio = { version = "1", features = ["full"] }
 futures = "0.3.30"
 crypto = "0.5.1"
 sha256 = "1.5.0"
+steganography = "1.0.2"
+image = "0.24.8"
