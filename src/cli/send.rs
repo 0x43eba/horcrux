@@ -3,6 +3,7 @@ use std::error::Error;
 use crate::transmit::client::send_shards_to_ipfs;
 use base64::{prelude::BASE64_STANDARD, Engine};
 use log::info;
+use crate::steg::encoder::encode_to_image;
 
 pub async fn send(input: &str, key: &str, reps: usize, shards: usize) -> Result<(), Box<dyn Error>> {
     println!("{}", input);
@@ -12,6 +13,7 @@ pub async fn send(input: &str, key: &str, reps: usize, shards: usize) -> Result<
     let ipfs_hashes = send_shards_to_ipfs(packaged_shards).await.unwrap();
     let hashes = ipfs_hashes.join(",");
     let hashes = BASE64_STANDARD.encode(hashes.as_bytes());
+    encode_to_image("./src/cli/blank.png", &hashes, "./src/cli/output.png");
     info!("Hashes: {}", hashes);
     Ok(())
 }
