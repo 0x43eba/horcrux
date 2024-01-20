@@ -1,5 +1,5 @@
 use std::collections::hash_map::HashMap;
-use log::info;
+use log::{info, error};
 use crate::cli::send::send;
 use crate::cli::get::get;
 
@@ -53,6 +53,20 @@ async fn handle_send(argv: HashMap<String, Vec<String>>) -> Result<(), Box<dyn s
             1
         },
     };
+
+    let file_location = match argv.get("filename") {
+        Some(file_location) => file_location[0].clone(),
+        None => {
+            info!("No file provided, defaulting to blank.png");
+            "NONE".to_string()
+        },
+    };
+
+    if file_location == "NONE".to_string() {
+        error!("No file provided. Exiting.");
+        return Ok(());
+    }
+
     let shards = match argv.get("shards") {
         Some(shards) => shards[0].parse::<usize>().unwrap(),
         None => {
@@ -60,12 +74,12 @@ async fn handle_send(argv: HashMap<String, Vec<String>>) -> Result<(), Box<dyn s
             1
         },
     };
-    send(&input, &key, reps, shards).await
+    send(&input, &key, reps, shards, file_location.as_str()).await
 }
 
 async fn handle_get(argv: HashMap<String, Vec<String>>) -> Result<(), Box<dyn std::error::Error>> {
     let has_key = argv.get("key").is_some();
-    let has_hashes = argv.get("hashes").is_some();
+    let has_hashes = argv.get("filename").is_some();
 
     if !has_key {
         info!("No key provided. Exiting.");
@@ -76,7 +90,7 @@ async fn handle_get(argv: HashMap<String, Vec<String>>) -> Result<(), Box<dyn st
         info!("No hashes provided. Exiting.");
         return Ok(());
     }
-    let hashes = argv.get("hashes").unwrap()[0].clone();
+    let hashes = argv.get("filename").unwrap()[0].clone();
     let key = argv.get("key").unwrap()[0].clone().to_string();
     let output = get(hashes, &key).await;
     match output {
