@@ -3,6 +3,8 @@ use log::{info, error};
 use crate::cli::send::send;
 use crate::cli::get::get;
 
+use super::get::get_to_pin;
+
 pub async fn handle_input() {
     let argv = std::env::args().collect::<Vec<String>>().into_iter().filter(|arg| arg.starts_with("--")).map(|arg| {
         let arg = arg.replace("--", "");
@@ -18,6 +20,7 @@ pub async fn handle_input() {
     let success = match mode.as_str() {
         "get" => handle_get(argv).await,
         "send" => handle_send(argv).await,
+        "pin" => pin_to_instance(argv).await,
         _ => handle_help().await,
     };
     if success.is_err() {
@@ -34,7 +37,13 @@ async fn handle_help() -> Result<(), Box<dyn std::error::Error>> {
 async fn handle_send(argv: HashMap<String, Vec<String>>) -> Result<(), Box<dyn std::error::Error>> {
     let has_input =  argv.get("input").is_some();
     let has_key = argv.get("key").is_some();
+    let has_file_location = argv.get("filename").is_some();
 
+    if !has_file_location {
+        info!("No file provided. Exiting.");
+        return Ok(());
+    }
+    
     if !has_input {
         info!("No input provided. Exiting.");
         return Ok(());
@@ -97,5 +106,33 @@ async fn handle_get(argv: HashMap<String, Vec<String>>) -> Result<(), Box<dyn st
         Ok(output) => info!("{}", output),
         Err(e) => return Err(e),
     }
+    Ok(())
+}
+
+async fn pin_to_instance(argv: HashMap<String, Vec<String>>) -> Result<(), Box<dyn std::error::Error>> {
+    let has_file_location = argv.get("filename").is_some();
+    if !has_file_location {
+        info!("No file provided. Exiting.");
+        return Ok(());
+    }
+
+    let file_location = match argv.get("filename") {
+        Some(file_location) => file_location[0].clone(),
+        None => {
+            info!("No file provided, defaulting to blank.png");
+            "NONE".to_string()
+        },
+    };
+
+    if file_location == "NONE".to_string() {
+        error!("No file provided. Exiting.");
+        return Ok(());
+    }
+
+    match get_to_pin(file_location).await {
+        Ok(_) => info!("Shards pinned to IPFS."),
+        Err(e) => return Err(e),
+    }
+
     Ok(())
 }

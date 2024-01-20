@@ -14,6 +14,10 @@ pub async fn send_shards_to_ipfs(shards: Vec<String>) -> Result<Vec<String>, Box
         match ipfs.add(cursor).await {
             Ok(res) => {
                 debug!("IPFS Hash: {}", res.hash);
+                match ipfs.pin_add(&res.hash.as_str(), true).await {
+                    Ok(_) => debug!("IPFS Hash pinned."),
+                    Err(e) => return Err(e.into()),
+                }
                 ipfs_hashes.push(res.hash);
             }
             Err(e) => return Err(e.into()),
@@ -39,4 +43,18 @@ pub async fn get_shards_from_ipfs(hashes: Vec<String>) -> Result<Vec<String>, Bo
     }
     debug!("Shards retrieved from IPFS.");
     Ok(shards)
+}
+
+pub async fn pin_to_instance(hashes: Vec<String>) -> Result<(), Box<dyn Error>> {
+    debug!("Pinning shards to IPFS..");
+    let ipfs = IpfsClient::default();
+    for hash in hashes {
+        debug!("Pinning shard to IPFS..");
+        match ipfs.pin_add(&hash, true).await {
+            Ok(_) => debug!("Shard pinned to IPFS."),
+            Err(e) => return Err(e.into()),
+        }
+    }
+    debug!("Shards pinned to IPFS.");
+    Ok(())
 }
