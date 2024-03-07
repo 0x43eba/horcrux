@@ -16,6 +16,8 @@ node running at the standard address.
 <img width="526" alt="Screenshot 2024-03-07 at 01 38 20" src="https://github.com/mapleman-is/horcrux/assets/76260172/1fcb66e8-af18-4ede-b9c1-b997bc062510">
 
 This is where the cool in James Bond-esque way, but not very practical part of the project comes into play. Alpha Channel Steganography. Since the algorithm emits a large number
-of hashes (1 for every shard times n redundant shards), I needed a place to keep them, and a way to cleanly send bulk hash data to other node operators for pinning. When this file
-is passed to the CLI, the tool extracts the hashes from the Alpha Channel, and executes a pin operation against the node the tool is pointed at. This means you can ask a maintainer
-to pin your shards, simply by sending them a photograph.
+of hashes (1 for every shard times n redundant shards), I needed a place to keep them, and a way to cleanly send bulk hash data to other node operators for pinning. I embed the hashes
+in the Alpha Channel of the image, and output a visually identical output image with this data embedded.
+
+When this file is passed to the CLI, the tool extracts the hashes from the Alpha Channel, and executes a pin operation against the node the tool is pointed at. 
+This means you can ask a maintainer to pin your shards, simply by sending them a photograph.
