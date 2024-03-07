@@ -21,3 +21,8 @@ in the Alpha Channel of the image, and output a visually identical output image 
 
 When this file is passed to the CLI, the tool extracts the hashes from the Alpha Channel, and executes a pin operation against the node the tool is pointed at. 
 This means you can ask a maintainer to pin your shards, simply by sending them a photograph.
+
+### Known Issues
+
+There's lots of redundant Base64 encoding/decoding steps left over from early testing that need to be cleared out. Ultimately we only need one on the pre-encryption step, and one
+when it is packaged for transmission.
