@@ -1,6 +1,6 @@
 ## Horcrux
 
-This is a small project I created to both learn Rust, and store encrypted data in multiple redundant sharts on IPFS. 
+This is a small project I created to both learn Rust, and store encrypted data in multiple redundant shards on IPFS. 
 The algorithm is not particularily practical, since you require control or access of multiple IPFS nodes for it to be effective. 
 That said, it was an interesting challenge to build.
 
